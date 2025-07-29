@@ -1,0 +1,177 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# **인디 버스 (Indie Stage) v1.0**
+
+## **1. 개요 (Overview)**
+
+### 1.1. 문제 정의 (Problem Statement)
+# Indieverse Product Requirements Document (PRD)
+
+## 🎯 CRITICAL: ALWAYS FOLLOW THESE RULES
+
+### ✅ MUST DO:
+- **ALWAYS** implement features according to the exact user stories specified
+- **ALWAYS** prioritize user experience for both bands and fans
+- **ALWAYS** maintain data privacy and security standards
+- **ALWAYS** follow the feature hierarchy: Epic 1 (Home) → Epic 2 (Scheduler) → Epic 3 (Passport) → Epic 4 (Playground) → Epic 5 (Profile)
+- **ALWAYS** implement proper error handling and loading states
+- **ALWAYS** ensure responsive design for mobile-first approach
+
+### ❌ NEVER DO:
+- **NEVER** implement features not specified in this PRD
+- **NEVER** skip user authentication and authorization
+- **NEVER** ignore data validation and sanitization
+- **NEVER** create features that violate copyright or privacy laws
+- **NEVER** implement automatic API integrations in v1.0 (manual input only)
+
+---
+
+## 1. Product Overview
+
+### 1.1. Problem Statement
+
+Indie bands and their fans share strong bonds based on high loyalty, but communication and information sharing channels are scattered across multiple SNS platforms and ticketing sites.
+
+- **Bands:** Face significant resource burden managing multiple channels and struggle to manage fandoms comprehensively while generating stable revenue.
+- **Fans:** Experience inconvenience searching for fragmented information across various platforms and lack systematic spaces to preserve concert memories.
+
+### 1.2. Goals & Success Metrics
+
+- **Primary Goal:** Build a powerful fandom platform with strong lock-in effects by minimizing band operational burdens while providing fans with integrated information and personalized memory storage spaces.
+- **Key Performance Indicators (KPIs):**
+  - **Activation:** Monthly Active Users (MAU), Average content uploads per band
+  - **Retention:** Monthly subscription retention rate, Return visit rate
+  - **Conversion:** New user to paid subscription conversion rate
+  - **Satisfaction:** Average number of tickets registered per fan in 'Indie Passport'
+
+---
+
+## 2. Target Users
+
+### 2.1. User Personas
+
+- **Indie Bands (Content Providers):**
+  - **Characteristics:** Operate as individuals or small groups, managing everything directly except music. Value fan communication but lack time.
+  - **Needs:** Easy management, fan response monitoring, stable income.
+- **Loyal Fans (Subscribers):**
+  - **Characteristics:** Passionately support one or more indie bands. Concert attendance is primary fan activity, want to know everything about bands. Value physical tickets, merchandise as 'memorabilia'.
+  - **Needs:** Accurate and integrated information, emotional connection with bands, space to preserve memories.
+
+---
+
+## 3. Feature Requirements
+
+### Epic 1: Home (Band Space) - PRIORITY 1
+
+> First impression showcasing both official and unofficial aspects of the band.
+
+**User Stories:**
+- As a band, we want to easily show fans our official activity records (history) and members' casual daily lives (stories).
+- As a fan, I want to see the latest updates and important history of my favorite bands at a glance.
+
+**Feature Details:**
+- **Member Stories:**
+  - Display at screen top with Instagram story-like UI
+  - Create individual story channels per band member (e.g., 'Vocal OOO', 'Guitar XXX')
+  - Content is NOT automatically deleted after 24 hours, permanently preserved in member's story archive
+  - Support photo, short video, and text uploads
+- **Blog-style History:**
+  - Located below stories, time-reverse sorted blog format
+  - Posts consist of 1 representative image + text
+  - Only band admin accounts can create posts (e.g., '1st Album Release', 'First Solo Concert')
+
+### Epic 2: Scheduler (Official Calendar) - PRIORITY 2
+
+> Activity calendar directly managed by bands ensuring 100% reliability.
+
+**User Stories:**
+- As a band, we want to inform fans of confirmed schedules (concerts, fan meetings, TV appearances) as quickly and accurately as possible.
+- As a fan, I want to check official schedules here without searching multiple sites.
+
+**Feature Details:**
+- Provide calendar-style schedule input form in band admin page
+- Required fields: Date, time, schedule name, location, booking link (optional)
+- Fan view supports monthly/list view switching
+- **Policy:** NO automatic API integration in v1.0. Manual input by bands only. (Consider for v2.0 roadmap)
+
+### Epic 3: Indie Passport (My Fan Journey) - PRIORITY 3
+
+> Personalized digital archive recording all fan activity memories.
+
+**User Stories:**
+- As a fan, I want to store all concert tickets without worry of losing them and record my emotions in my own way.
+
+**Feature Details:**
+- **Ticket Registration:**
+  - Physical tickets: Photo capture, Digital tickets: Image upload
+  - Manual input of ticket information (concert name, date, venue)
+  - **Policy:** Consider OCR for automatic text input UX improvement (v1.5 roadmap)
+- **Digital Diary:**
+  - Click registered ticket to access detail page
+  - Write personal diary/memo for each concert (private by default)
+  - Upload photos taken at concert or highlight videos (max 1 minute)
+- **Storage Policy:**
+  - Set upload capacity limit per user for cost management (e.g., 5GB total)
+  - Include in terms: 'Uploaded content is for personal storage, copyright and portrait rights responsibility lies with uploader'
+
+### Epic 4: Goods Playground (Fan Creation Playground) - PRIORITY 4
+
+> Community space where fan creativity flourishes organically.
+
+**User Stories:**
+- As a fan, I want to show off my unofficial merchandise designs to other fans and enjoy browsing others' ideas.
+
+**Feature Details:**
+- **Community:** Simple anonymous bulletin board format (Categories: 'Show Off', 'Share/Exchange', 'Information Sharing')
+- **Preview Templates:**
+  - Provide 'Create as Template' feature when writing posts
+  - Available templates: Photocards, square/circular badges, stickers
+  - Auto-generate mockup images when users upload design images to templates
+- **Policy:**
+  - NO revenue generation features. Platform does not participate in production or transactions
+  - Include in community guidelines: 'Prohibited commercial use of official logos/artist portrait rights' (Non-commercial secondary creation tolerated as fandom culture)
+
+### Epic 5: Profile & Band Switching - PRIORITY 5
+
+> Usability for multi-fandom support.
+
+**User Stories:**
+- As a fan, I want to check news from all bands I support in this single app.
+
+**Feature Details:**
+- Display 'Subscribed Bands List' on profile screen
+- Selecting specific band from list switches all app data (home, schedule, etc.) to that band's content
+- 'Indie Passport' shows all tickets integrated regardless of band
+
+---
+
+## 4. Future Roadmap
+
+- **v1.5:**
+  - Enhanced push notifications (schedule registration alerts, story upload notifications)
+  - Fan data dashboard for bands (subscriber trends, content responses)
+  - Ticket archive OCR functionality
+- **v2.0:**
+  - Automatic schedule integration (major ticketing site API integration)
+  - Special benefits system for long-term subscribers
+
+---
+
+## 5. Technical Constraints
+
+- **v1.0 Limitations:**
+  - NO automatic API integrations
+  - Manual data input only
+  - Basic notification system
+- **Storage Limits:**
+  - 5GB per user for media uploads
+  - Optimize image/video compression
+- **Performance Requirements:**
+  - Mobile-first responsive design
+  - Fast loading times (<3 seconds)
+
+
+  - Offline capability for basic features

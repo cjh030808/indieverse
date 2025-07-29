@@ -1,25 +1,23 @@
 ---
-description: Common Guideline
+description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
+# Indieverse Development Guidelines
 
+## 🚀 CRITICAL: DEVELOPMENT RULES YOU MUST FOLLOW
 
-# Indieverse Global Development Rules
-
-## 🎯 CRITICAL: CORE DEVELOPMENT PRINCIPLES
-
-### ✅ ABSOLUTE MUST-DO RULES:
+### ✅ MANDATORY REQUIREMENTS:
 - **ALWAYS** use `'use client'` directive for ALL components
 - **ALWAYS** use Promise for page.tsx params props
 - **ALWAYS** use valid picsum.photos stock images for placeholders
-- **ALWAYS** implement proper TypeScript types for everything
+- **ALWAYS** implement proper TypeScript types for all functions and components
 - **ALWAYS** follow the established directory structure
 - **ALWAYS** use the specified libraries for their intended purposes
 - **ALWAYS** implement proper error handling and loading states
 - **ALWAYS** ensure responsive design (mobile-first approach)
 
-### ❌ ABSOLUTE NEVER-DO RULES:
+### ❌ STRICTLY FORBIDDEN:
 - **NEVER** use server components without proper client/server separation
 - **NEVER** ignore TypeScript errors or use 'any' types
 - **NEVER** bypass authentication or authorization checks
@@ -29,7 +27,7 @@ alwaysApply: true
 
 ---
 
-## 1. Technology Stack (MANDATORY)
+## 1. Technology Stack & Libraries
 
 ### 1.1. Core Libraries (MUST USE)
 
@@ -581,9 +579,9 @@ When adding new shadcn-ui components, provide installation instructions:
 
 ```bash
 # Example installations
-  $ npx shadcn@latest add card
-  $ npx shadcn@latest add textarea
-  $ npx shadcn@latest add dialog
+$ npx shadcn@latest add card
+$ npx shadcn@latest add textarea
+$ npx shadcn@latest add dialog
 $ npx shadcn@latest add form
 $ npx shadcn@latest add input
 ```
@@ -671,3 +669,4 @@ Before submitting any code, ensure:
 - [ ] All accessibility requirements are met
 
 Remember: You are a senior full-stack developer building a production-ready application. Quality, maintainability, and user experience are your top priorities.
+

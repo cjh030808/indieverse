@@ -1,0 +1,601 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Indieverse Coding Standards & Best Practices
+
+## 🎯 CRITICAL: CODING STANDARDS YOU MUST FOLLOW
+
+### ✅ MANDATORY CODING RULES:
+- **ALWAYS** use TypeScript for all code (no JavaScript)
+- **ALWAYS** use descriptive variable and function names
+- **ALWAYS** implement early returns for better readability
+- **ALWAYS** use functional programming patterns
+- **ALWAYS** write self-documenting code
+- **ALWAYS** use proper TypeScript types (no 'any')
+- **ALWAYS** follow the established naming conventions
+- **ALWAYS** implement proper error handling
+
+### ❌ STRICTLY FORBIDDEN:
+- **NEVER** use 'any' type in TypeScript
+- **NEVER** use magic numbers or hardcoded values
+- **NEVER** write overly complex functions (>20 lines)
+- **NEVER** ignore TypeScript errors
+- **NEVER** use deprecated patterns or libraries
+- **NEVER** skip code documentation for complex logic
+
+---
+
+## 1. TypeScript Standards
+
+### 1.1. Type Definitions (MANDATORY)
+
+```typescript
+// ✅ CORRECT: Proper type definitions
+interface Band {
+  id: string;
+  name: string;
+  description?: string;
+  profileImage?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type BandStatus = 'active' | 'inactive' | 'pending';
+
+interface BandFormData {
+  name: string;
+  description: string;
+  profileImage?: File;
+}
+
+// ❌ WRONG: Using 'any' or loose types
+interface Band {
+  id: any;
+  name: any;
+  data: any;
+}
+```
+
+### 1.2. Type Safety Rules
+
+**✅ MUST DO:**
+- Always define interfaces for all data structures
+- Always use union types for finite value sets
+- Always use optional properties (?) for nullable fields
+- Always use proper return types for functions
+- Always use generic types when appropriate
+
+**❌ NEVER DO:**
+- Don't use 'any' type
+- Don't use 'object' type (use specific interfaces)
+- Don't ignore TypeScript errors
+- Don't use type assertions without validation
+
+---
+
+## 2. Naming Conventions
+
+### 2.1. Variable and Function Naming
+
+```typescript
+// ✅ CORRECT: Descriptive names
+const activeBands = bands.filter(band => band.status === 'active');
+const handleBandSelection = (bandId: string) => { /* ... */ };
+const isBandActive = (band: Band) => band.status === 'active';
+const formatBandName = (name: string) => name.trim().toLowerCase();
+
+// ❌ WRONG: Unclear names
+const data = bands.filter(b => b.s === 'a');
+const handle = (id: string) => { /* ... */ };
+const check = (band: Band) => band.s === 'a';
+const format = (name: string) => name.trim().toLowerCase();
+```
+
+### 2.2. Component Naming
+
+```typescript
+// ✅ CORRECT: PascalCase for components
+export function BandCard({ band }: BandCardProps) { /* ... */ }
+export function BandList({ bands }: BandListProps) { /* ... */ }
+export function BandForm({ onSubmit }: BandFormProps) { /* ... */ }
+
+// ❌ WRONG: camelCase or unclear names
+export function bandCard({ band }: BandCardProps) { /* ... */ }
+export function Band({ bands }: BandListProps) { /* ... */ }
+export function Form({ onSubmit }: BandFormProps) { /* ... */ }
+```
+
+### 2.3. File Naming
+
+```typescript
+// ✅ CORRECT: Descriptive file names
+BandCard.tsx
+BandList.tsx
+BandForm.tsx
+useBand.ts
+band-utils.ts
+band-types.ts
+
+// ❌ WRONG: Generic or unclear names
+Card.tsx
+List.tsx
+Form.tsx
+hook.ts
+utils.ts
+types.ts
+```
+
+---
+
+## 3. Function Design Principles
+
+### 3.1. Function Structure (MANDATORY)
+
+```typescript
+// ✅ CORRECT: Small, focused functions
+export function getActiveBands(bands: Band[]): Band[] {
+  return bands.filter(band => band.status === 'active');
+}
+
+export function formatBandName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+export function validateBandData(data: BandFormData): ValidationResult {
+  const errors: string[] = [];
+  
+  if (!data.name.trim()) {
+    errors.push('Band name is required');
+  }
+  
+  if (data.name.length < 2) {
+    errors.push('Band name must be at least 2 characters');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+// ❌ WRONG: Large, complex functions
+export function processBandData(bands: any[], options: any) {
+  // 50+ lines of complex logic
+  // Multiple responsibilities
+  // Hard to test and maintain
+}
+```
+
+### 3.2. Function Rules
+
+**✅ MUST DO:**
+- Keep functions small (<20 lines)
+- Single responsibility principle
+- Use early returns for better readability
+- Use descriptive parameter names
+- Implement proper error handling
+- Use pure functions when possible
+
+**❌ NEVER DO:**
+- Don't create functions with multiple responsibilities
+- Don't use magic numbers or hardcoded values
+- Don't ignore error scenarios
+- Don't create functions that are too long
+- Don't use side effects in pure functions
+
+---
+
+## 4. Error Handling Standards
+
+### 4.1. Error Handling Patterns
+
+```typescript
+// ✅ CORRECT: Proper error handling
+export async function fetchBand(bandId: string): Promise<Band> {
+  try {
+    const { data, error } = await supabase
+      .from('bands')
+      .select('*')
+      .eq('id', bandId)
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to fetch band: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('Band not found');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching band:', error);
+    throw error;
+  }
+}
+
+// ✅ CORRECT: Early returns for validation
+export function validateBandForm(data: BandFormData): ValidationResult {
+  if (!data.name?.trim()) {
+    return {
+      isValid: false,
+      errors: ['Band name is required']
+    };
+  }
+
+  if (data.name.length < 2) {
+    return {
+      isValid: false,
+      errors: ['Band name must be at least 2 characters']
+    };
+  }
+
+  return {
+    isValid: true,
+    errors: []
+  };
+}
+
+// ❌ WRONG: Poor error handling
+export async function fetchBand(bandId: string) {
+  const data = await supabase.from('bands').select('*').eq('id', bandId);
+  return data; // No error handling
+}
+```
+
+### 4.2. Error Handling Rules
+
+**✅ MUST DO:**
+- Always implement try-catch blocks for async operations
+- Always provide meaningful error messages
+- Always log errors for debugging
+- Always use early returns for validation
+- Always handle edge cases
+
+**❌ NEVER DO:**
+- Don't ignore errors
+- Don't use generic error messages
+- Don't let errors crash the application
+- Don't skip error logging
+- Don't assume data will always be valid
+
+---
+
+## 5. Code Organization Standards
+
+### 5.1. Import Organization
+
+```typescript
+// ✅ CORRECT: Organized imports
+// React and Next.js imports
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+// Third-party library imports
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+// UI component imports
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+
+// Utility and type imports
+import { cn } from '@/lib/utils';
+import { Band, BandFormData } from '@/types/band';
+
+// Local imports
+import { fetchBand, createBand } from './api';
+import { useBandStore } from './store';
+
+// ❌ WRONG: Disorganized imports
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { fetchBand } from './api';
+import { useQuery } from '@tanstack/react-query';
+import { Band } from '@/types/band';
+```
+
+### 5.2. Code Structure
+
+```typescript
+// ✅ CORRECT: Well-organized component
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+
+// Types
+interface BandCardProps {
+  band: Band;
+  onSelect?: (band: Band) => void;
+  className?: string;
+}
+
+// Constants
+const BAND_STATUS_COLORS = {
+  active: 'bg-green-100 text-green-800',
+  inactive: 'bg-gray-100 text-gray-800',
+  pending: 'bg-yellow-100 text-yellow-800',
+} as const;
+
+// Component
+export function BandCard({ band, onSelect, className }: BandCardProps) {
+  // State
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Handlers
+  const handleClick = () => {
+    onSelect?.(band);
+  };
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
+  // Computed values
+  const statusColor = BAND_STATUS_COLORS[band.status];
+
+  // Render
+  return (
+    <Card 
+      className={cn('p-4 cursor-pointer transition-all', className)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+    >
+      <h3 className="text-lg font-semibold">{band.name}</h3>
+      <p className="text-sm text-gray-600 mt-2">{band.description}</p>
+      <span className={cn('inline-block px-2 py-1 rounded text-xs mt-2', statusColor)}>
+        {band.status}
+      </span>
+    </Card>
+  );
+}
+```
+
+---
+
+## 6. Performance Standards
+
+### 6.1. Performance Optimization
+
+```typescript
+// ✅ CORRECT: Optimized components
+import { memo, useMemo, useCallback } from 'react';
+
+// Memoized component
+export const BandCard = memo(({ band, onSelect }: BandCardProps) => {
+  // Memoized expensive calculations
+  const formattedName = useMemo(() => {
+    return band.name.trim().toLowerCase();
+  }, [band.name]);
+
+  // Memoized event handlers
+  const handleClick = useCallback(() => {
+    onSelect?.(band);
+  }, [band, onSelect]);
+
+  return (
+    <Card onClick={handleClick}>
+      <h3>{formattedName}</h3>
+    </Card>
+  );
+});
+
+// ❌ WRONG: Unoptimized components
+export function BandCard({ band, onSelect }: BandCardProps) {
+  // Expensive calculation on every render
+  const formattedName = band.name.trim().toLowerCase();
+  
+  // New function on every render
+  const handleClick = () => {
+    onSelect?.(band);
+  };
+
+  return (
+    <Card onClick={handleClick}>
+      <h3>{formattedName}</h3>
+    </Card>
+  );
+}
+```
+
+### 6.2. Performance Rules
+
+**✅ MUST DO:**
+- Use React.memo for expensive components
+- Use useMemo for expensive calculations
+- Use useCallback for event handlers
+- Implement proper loading states
+- Optimize images with Next.js Image component
+
+**❌ NEVER DO:**
+- Don't create unnecessary re-renders
+- Don't ignore bundle size
+- Don't skip code splitting
+- Don't use unoptimized images
+- Don't perform expensive operations in render
+
+---
+
+## 7. Testing Standards
+
+### 7.1. Test Structure
+
+```typescript
+// ✅ CORRECT: Well-structured tests
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BandCard } from './BandCard';
+
+describe('BandCard', () => {
+  const mockBand = {
+    id: '1',
+    name: 'Test Band',
+    description: 'Test Description',
+    status: 'active' as const,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  const mockOnSelect = jest.fn();
+
+  beforeEach(() => {
+    mockOnSelect.mockClear();
+  });
+
+  it('renders band information correctly', () => {
+    render(<BandCard band={mockBand} onSelect={mockOnSelect} />);
+    
+    expect(screen.getByText('Test Band')).toBeInTheDocument();
+    expect(screen.getByText('Test Description')).toBeInTheDocument();
+    expect(screen.getByText('active')).toBeInTheDocument();
+  });
+
+  it('calls onSelect when clicked', () => {
+    render(<BandCard band={mockBand} onSelect={mockOnSelect} />);
+    
+    fireEvent.click(screen.getByRole('button'));
+    
+    expect(mockOnSelect).toHaveBeenCalledWith(mockBand);
+  });
+
+  it('handles missing onSelect prop', () => {
+    render(<BandCard band={mockBand} />);
+    
+    expect(() => {
+      fireEvent.click(screen.getByRole('button'));
+    }).not.toThrow();
+  });
+});
+```
+
+### 7.2. Testing Rules
+
+**✅ MUST DO:**
+- Write tests for all critical functionality
+- Test edge cases and error scenarios
+- Use descriptive test names
+- Mock external dependencies
+- Test accessibility features
+
+**❌ NEVER DO:**
+- Don't skip testing critical business logic
+- Don't ignore error scenarios
+- Don't test implementation details
+- Don't create brittle tests
+- Don't skip accessibility testing
+
+---
+
+## 8. Documentation Standards
+
+### 8.1. Code Documentation
+
+```typescript
+// ✅ CORRECT: Well-documented code
+/**
+ * Fetches a band by its ID from the database
+ * @param bandId - The unique identifier of the band
+ * @returns Promise<Band> - The band data
+ * @throws Error - When band is not found or database error occurs
+ */
+export async function fetchBand(bandId: string): Promise<Band> {
+  // Implementation...
+}
+
+/**
+ * Validates band form data and returns validation result
+ * @param data - The form data to validate
+ * @returns ValidationResult - Object containing validation status and errors
+ */
+export function validateBandForm(data: BandFormData): ValidationResult {
+  // Implementation...
+}
+
+// ✅ CORRECT: JSDoc for complex functions
+/**
+ * Processes band data and applies business rules
+ * @param bands - Array of bands to process
+ * @param options - Processing options
+ * @returns ProcessedBand[] - Array of processed bands
+ */
+export function processBands(bands: Band[], options: ProcessingOptions): ProcessedBand[] {
+  // Implementation...
+}
+```
+
+### 8.2. Documentation Rules
+
+**✅ MUST DO:**
+- Document complex functions with JSDoc
+- Explain the "why" not just the "what"
+- Keep documentation up to date
+- Use clear and concise language
+- Document business logic and edge cases
+
+**❌ NEVER DO:**
+- Don't document obvious code
+- Don't write outdated documentation
+- Don't ignore complex business logic
+- Don't skip API documentation
+- Don't use unclear language
+
+---
+
+## 9. Code Review Checklist
+
+### 9.1. Pre-Submission Checklist
+
+Before submitting any code for review, ensure:
+
+- [ ] All TypeScript errors are resolved
+- [ ] All functions are properly typed
+- [ ] All error handling is implemented
+- [ ] All tests are passing
+- [ ] All performance optimizations are applied
+- [ ] All accessibility requirements are met
+- [ ] All documentation is updated
+- [ ] All naming conventions are followed
+- [ ] All code is properly formatted
+- [ ] All imports are organized
+
+### 9.2. Code Review Standards
+
+**Reviewers MUST check:**
+- Type safety and proper TypeScript usage
+- Error handling and edge cases
+- Performance implications
+- Security considerations
+- Accessibility compliance
+- Test coverage
+- Code readability and maintainability
+- Documentation quality
+
+---
+
+## 10. Final Reminders
+
+### 10.1. Quality Principles
+
+1. **Simplicity:** Keep code simple and readable
+2. **Maintainability:** Write code that's easy to maintain
+3. **Testability:** Write code that's easy to test
+4. **Performance:** Consider performance implications
+5. **Security:** Follow security best practices
+6. **Accessibility:** Ensure accessibility compliance
+
+### 10.2. Continuous Improvement
+
+- Regularly review and refactor code
+- Stay updated with best practices
+- Learn from code reviews
+- Share knowledge with team members
+- Contribute to coding standards
+
+Remember: You are a senior developer building production-ready code. Quality, maintainability, and user experience are your top priorities. Every line of code should reflect these principles.
+

@@ -1,0 +1,244 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## **1. 개요 (Overview)**
+
+본 문서는 '인디 스테이지' 프로덕트의 기술적 요구사항 및 아키텍처 설계를 정의합니다. PRD에 명시된 기능들을 **Next.js 15 (App Router)**, **TypeScript**, **Supabase**, **Tailwind CSS**를 중심으로 한 기술 스택을 사용하여 구현하는 것을 목표로 합니다.
+
+## **2. 전체 아키텍처 (Overall Architecture)**
+# Indieverse Technical Architecture
+
+## 🏗️ CRITICAL: ALWAYS FOLLOW THESE ARCHITECTURAL RULES
+
+### ✅ MUST IMPLEMENT:
+- **ALWAYS** use Next.js 15.1.0 App Router for all routing
+- **ALWAYS** implement proper server/client component separation
+- **ALWAYS** use Supabase for all backend services
+- **ALWAYS** implement proper TypeScript types for all data structures
+- **ALWAYS** follow the established directory structure
+- **ALWAYS** use the specified state management libraries
+
+### ❌ NEVER IMPLEMENT:
+- **NEVER** use client-side rendering for SEO-critical pages
+- **NEVER** bypass authentication/authorization checks
+- **NEVER** store sensitive data in client-side state
+- **NEVER** use deprecated or unsupported libraries
+- **NEVER** ignore error boundaries and loading states
+
+---
+
+## 1. System Overview
+
+Indieverse is a full-stack web application built with modern React ecosystem, designed to serve indie bands and their fans with integrated communication and memory preservation features.
+
+### 1.1. Technology Stack
+
+**Frontend Framework:** Next.js 15.1.0 (App Router)
+**Backend:** Supabase (PostgreSQL, Auth, Storage, Edge Functions)
+**Language:** TypeScript 5
+**Styling:** Tailwind CSS 3.4.1
+**State Management:** TanStack React Query 5 + Zustand 4
+**UI Components:** shadcn/ui + Radix UI
+**Forms:** React Hook Form 7 + Zod 3
+
+---
+
+## 2. Architecture Patterns
+
+### 2.1. Rendering Strategy
+
+- **Static Site Generation (SSG):** Apply to low-frequency change pages (service introduction, terms) for optimal initial loading speed
+- **Server-Side Rendering (SSR):** Apply to pages that dynamically change based on user authentication status or band data (home, scheduler). Actively utilize **@supabase/ssr** library to safely create and use Supabase client in server components and manage user sessions
+- **Client-Side Rendering (CSR):** Use 'use client' directive for components with high interactivity (forms, dynamic UI)
+
+### 2.2. Backend & Database
+
+- **BaaS:** Adopt **Supabase** as backend infrastructure
+  - **Authentication:** Use Supabase Auth for email/password-based user (fans, bands) authentication
+  - **Database:** Use Supabase Postgres DB to manage all data. Detailed definition in 'Data Model' section below
+  - **Storage:** Use Supabase Storage for all user-uploaded media files (ticket images, profile photos, story videos, etc.)
+  - **Edge Functions (Future Consideration):** Utilize Supabase Edge Functions for complex server logic (e.g., monthly highlight video auto-generation)
+
+### 2.3. State Management
+
+- **Server State:** Use **TanStack React Query 5** to manage all data fetched from Supabase. Maintain UI consistency through caching, revalidation, and synchronization of server data, minimizing unnecessary API calls
+- **Client State:** Use **Zustand 4** to manage UI states (modal open/close, selected tabs, etc.) that are globally needed on the client side in a lightweight manner
+- **Form State:** Use **React Hook Form 7** to handle state management, rendering optimization, and validation for all forms (login, signup, content creation, etc.). Integrate with **Zod 3** to implement powerful type-safe schema-based validation
+
+### 2.4. UI & Styling
+
+- **CSS Framework:** Use **Tailwind CSS 3.4.1** to apply styles in utility-first approach. Define custom themes (colors, fonts, etc.) in tailwind.config.ts to build consistent design system
+- **Component Library:** Build UI components based on **shadcn/ui**. Add necessary components directly to project using npx shadcn-ui@latest add [component] command to secure flexibility for customization
+- **Headless UI:** Through shadcn/ui based on **Radix UI**, comply with web accessibility (a11y) including keyboard navigation and screen reader support by default
+- **Animation:** Use **Framer Motion 11** to implement smooth and interactive micro-animations such as page transitions, modal appearances, and element hover effects
+- **Icons:** Use **Lucide React** to consistently apply lightweight SVG icons
+
+---
+
+## 3. Directory Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication routes
+│   ├── (dashboard)/       # Protected dashboard routes
+│   ├── api/               # API routes
+│   └── globals.css        # Global styles
+├── components/
+│   ├── ui/                # shadcn/ui components
+│   └── shared/            # Reusable components
+├── features/
+│   ├── auth/              # Authentication feature
+│   ├── bands/             # Band management feature
+│   ├── fans/              # Fan features
+│   ├── stories/           # Story feature
+│   ├── scheduler/         # Schedule management
+│   ├── passport/          # Ticket archive feature
+│   └── playground/        # Community feature
+├── lib/
+│   ├── supabase/          # Supabase client configuration
+│   ├── utils.ts           # Utility functions
+│   └── validations.ts     # Zod schemas
+├── hooks/                 # Custom React hooks
+├── types/                 # TypeScript type definitions
+└── constants/             # Application constants
+```
+
+---
+
+## 4. Data Model
+
+### 4.1. Core Entities
+
+**Users (auth.users)**
+- id: uuid (primary key)
+- email: string
+- role: 'band' | 'fan'
+- created_at: timestamp
+
+**Bands (bands)**
+- id: uuid (primary key)
+- user_id: uuid (foreign key to users)
+- name: string
+- description: text
+- profile_image: string (storage URL)
+- created_at: timestamp
+
+**Fans (fans)**
+- id: uuid (primary key)
+- user_id: uuid (foreign key to users)
+- username: string
+- profile_image: string (storage URL)
+- created_at: timestamp
+
+**Band Subscriptions (band_subscriptions)**
+- id: uuid (primary key)
+- fan_id: uuid (foreign key to fans)
+- band_id: uuid (foreign key to bands)
+- created_at: timestamp
+
+### 4.2. Content Entities
+
+**Stories (stories)**
+- id: uuid (primary key)
+- band_id: uuid (foreign key to bands)
+- member_name: string
+- content_type: 'image' | 'video' | 'text'
+- content_url: string (storage URL)
+- text_content: text
+- created_at: timestamp
+
+**History Posts (history_posts)**
+- id: uuid (primary key)
+- band_id: uuid (foreign key to bands)
+- title: string
+- content: text
+- image_url: string (storage URL)
+- created_at: timestamp
+
+**Schedules (schedules)**
+- id: uuid (primary key)
+- band_id: uuid (foreign key to bands)
+- title: string
+- description: text
+- event_date: timestamp
+- location: string
+- booking_url: string
+- created_at: timestamp
+
+### 4.3. Fan Content Entities
+
+**Tickets (tickets)**
+- id: uuid (primary key)
+- fan_id: uuid (foreign key to fans)
+- concert_name: string
+- event_date: timestamp
+- venue: string
+- ticket_image: string (storage URL)
+- created_at: timestamp
+
+**Ticket Diaries (ticket_diaries)**
+- id: uuid (primary key)
+- ticket_id: uuid (foreign key to tickets)
+- content: text
+- media_urls: string[] (storage URLs)
+- created_at: timestamp
+
+**Community Posts (community_posts)**
+- id: uuid (primary key)
+- fan_id: uuid (foreign key to fans)
+- category: 'show_off' | 'share' | 'info'
+- title: string
+- content: text
+- template_type: string
+- design_image: string (storage URL)
+- created_at: timestamp
+
+---
+
+## 5. Security & Performance
+
+### 5.1. Security Measures
+
+- **Row Level Security (RLS):** Implement RLS policies on all Supabase tables
+- **Authentication:** JWT-based authentication with refresh tokens
+- **Authorization:** Role-based access control (band vs fan)
+- **Data Validation:** Server-side validation with Zod schemas
+- **File Upload:** Secure file upload with size and type restrictions
+
+### 5.2. Performance Optimizations
+
+- **Image Optimization:** Next.js Image component with automatic optimization
+- **Caching:** React Query for server state caching
+- **Code Splitting:** Automatic code splitting with Next.js
+- **Bundle Optimization:** Tree shaking and dynamic imports
+- **Database Indexing:** Proper indexing on frequently queried columns
+
+---
+
+## 6. Development Guidelines
+
+### 6.1. Code Organization
+
+- **Feature-based Structure:** Organize code by features rather than technical concerns
+- **Component Composition:** Prefer composition over inheritance
+- **Type Safety:** Use TypeScript strictly, avoid 'any' types
+- **Error Handling:** Implement proper error boundaries and loading states
+
+### 6.2. Testing Strategy
+
+- **Unit Tests:** Test individual components and utilities
+- **Integration Tests:** Test feature workflows
+- **E2E Tests:** Test critical user journeys
+- **Performance Tests:** Monitor bundle size and loading times
+
+### 6.3. Deployment
+
+- **Environment:** Vercel for frontend, Supabase for backend
+- **CI/CD:** Automated testing and deployment
+- **Monitoring:** Error tracking and performance monitoring
+
+
+- **Backup:** Regular database backups and disaster recovery

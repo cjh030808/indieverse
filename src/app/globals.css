@@ -67,3 +67,57 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* FullCalendar Styles */
+.calendar-container .fc {
+  font-family: inherit;
+}
+
+.calendar-container .fc-theme-standard td,
+.calendar-container .fc-theme-standard th {
+  border-color: #e5e7eb;
+}
+
+.calendar-container .fc-button-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.calendar-container .fc-button-primary:not(:disabled):active,
+.calendar-container .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.calendar-container .fc-button-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.calendar-container .fc-event {
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.calendar-container .fc-event:hover {
+  opacity: 0.8;
+}
+
+.calendar-container .fc-daygrid-day-number {
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.calendar-container .fc-col-header-cell {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.calendar-container .fc-toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}

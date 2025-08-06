@@ -7,6 +7,7 @@ export interface Story {
   likes: number;
   comments: number;
   imageUrl?: string;
+  type?: 'story' | 'announcement' | 'photo' | 'video';
 }
 
 export interface BandMember {

@@ -3,6 +3,7 @@
 import { Header } from "@/components/layout/Header";
 import { StoryHeader } from "@/features/stories/components/StoryHeader";
 import { MusicStaffFeed } from "@/features/stories/components/MusicStaffFeed";
+import { BandStoriesFeed } from "@/features/stories/components/BandStoriesFeed";
 import { useBandMembers } from "@/features/stories/hooks/useStories";
 import { cn } from "@/lib/utils";
 import {
@@ -57,7 +58,15 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className={`grid gap-4 ${(members || []).length > 8 ? 'grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10' : 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10'} ${(members || []).length > 8 ? 'grid-rows-2' : 'grid-rows-1'}`}>
+              <div
+                className={`grid gap-4 ${
+                  (members || []).length > 8
+                    ? "grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10"
+                    : "grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10"
+                } ${
+                  (members || []).length > 8 ? "grid-rows-2" : "grid-rows-1"
+                }`}
+              >
                 {(members || []).map((member) => {
                   const getInstrumentIcon = (role: string) => {
                     switch (role.toLowerCase()) {
@@ -163,15 +172,30 @@ export default function DashboardPage() {
 
         {/* Stories Feed with Dark Theme */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-6">
-            <Disc3 className="w-6 h-6 text-blue-400" />
-            <h2 className="text-2xl font-bold text-white">최신 소식</h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+          <div className="bg-white shadow-lg rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Disc3 className="w-6 h-6 text-blue-500" />
+              <h2 className="text-2xl font-bold text-gray-900">최신 소식</h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+            </div>
+            <div className="space-y-6">
+              <MusicStaffFeed />
+            </div>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <MusicStaffFeed />
+        {/* Band Stories Section */}
+        <div className="mb-6">
+          <div className="bg-white shadow-lg rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Music className="w-6 h-6 text-blue-500" />
+              <h2 className="text-2xl font-bold text-gray-900">밴드 이야기</h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+            </div>
+            <div className="space-y-6">
+              <BandStoriesFeed />
+            </div>
+          </div>
         </div>
       </main>
     </div>

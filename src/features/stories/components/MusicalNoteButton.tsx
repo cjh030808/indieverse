@@ -10,6 +10,8 @@ interface MusicalNoteButtonProps {
   noteType: 'quarter' | 'eighth' | 'half' | 'whole';
   style?: React.CSSProperties;
   className?: string;
+  onStoryClick?: (story: Story) => void;
+  dayName?: string;
 }
 
 // Musical note symbols for different types
@@ -39,22 +41,39 @@ export function MusicalNoteButton({
   story, 
   noteType, 
   style, 
-  className 
+  className,
+  onStoryClick,
+  dayName
 }: MusicalNoteButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = () => {
-    // TODO: Open modal with story content
-    console.log('Opening story:', story.id);
+    if (onStoryClick) {
+      onStoryClick(story);
+    } else {
+      // Fallback for backward compatibility
+      console.log('Opening story:', story.id);
+    }
   };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('ko-KR', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      weekday: 'short'
     });
+  };
+
+  const getStoryTypeLabel = (type?: string) => {
+    switch (type) {
+      case 'announcement': return '공지사항';
+      case 'video': return '비디오';
+      case 'photo': return '사진';
+      case 'story': return '스토리';
+      default: return '스토리';
+    }
   };
 
   return (
@@ -109,17 +128,33 @@ export function MusicalNoteButton({
       {/* Tooltip/Hover Card */}
       {showTooltip && (
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 hidden sm:block">
-          <div className="bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg p-3 w-64 shadow-xl">
+          <div className="bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg p-3 w-72 shadow-xl">
             {/* Arrow pointing down */}
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900/95 border-r border-b border-white/20 rotate-45" />
             
             {/* Content */}
             <div className="space-y-2">
+              {/* Story Type Badge */}
+              <div className="flex items-center justify-between mb-2">
+                <div className={cn(
+                  'px-2 py-1 rounded-full text-xs font-medium text-white',
+                  'bg-gradient-to-r',
+                  NOTE_COLORS[noteType]
+                )}>
+                  {getStoryTypeLabel(story.type)}
+                </div>
+                {dayName && (
+                  <div className="text-xs text-purple-300 bg-purple-500/20 px-2 py-1 rounded-full">
+                    {dayName}요일
+                  </div>
+                )}
+              </div>
+
               {/* Author and Date */}
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <div className="flex items-center gap-1">
                   <User className="w-3 h-3" />
-                  <span>{story.memberName}</span>
+                  <span className="text-white font-medium">{story.memberName}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
@@ -129,8 +164,8 @@ export function MusicalNoteButton({
               
               {/* Story Content Preview */}
               <div className="text-white text-sm leading-relaxed">
-                {story.content.length > 120 
-                  ? `${story.content.substring(0, 120)}...` 
+                {story.content.length > 100 
+                  ? `${story.content.substring(0, 100)}...` 
                   : story.content
                 }
               </div>
@@ -147,19 +182,26 @@ export function MusicalNoteButton({
               )}
               
               {/* Stats */}
-              <div className="flex items-center gap-4 text-xs text-gray-400 pt-1 border-t border-white/10">
-                <div className="flex items-center gap-1">
-                  <Heart className="w-3 h-3" />
-                  <span>{story.likes}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageCircle className="w-3 h-3" />
-                  <span>{story.comments}</span>
+              <div className="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-white/10">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-3 h-3 text-red-400" />
+                    <span>{story.likes}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageCircle className="w-3 h-3 text-blue-400" />
+                    <span>{story.comments}</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-1">
                   <Music className="w-3 h-3" />
                   <span className="capitalize">{noteType} note</span>
                 </div>
+              </div>
+
+              {/* Click hint */}
+              <div className="text-center text-xs text-gray-500 pt-1 border-t border-white/5">
+                클릭하여 전체 내용 보기
               </div>
             </div>
           </div>

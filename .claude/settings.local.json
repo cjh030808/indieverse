@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__supabase-community-supabase-mcp__apply_migration",
+      "mcp__supabase-community-supabase-mcp__execute_sql",
+      "mcp__supabase-community-supabase-mcp__list_tables",
+      "mcp__supabase-community-supabase-mcp__get_project_url",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run dev:*)"
+    ],
+    "deny": []
+  }
+}

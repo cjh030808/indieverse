@@ -13,7 +13,6 @@ interface HeaderProps {
 const navigationItems = [
   { href: '/home', label: 'Home' },
   { href: '/scheduler', label: 'Scheduler' },
-  { href: '/passport', label: 'Indie Passport' },
   { href: '/playground', label: 'Playground' },
 ];
 

@@ -16,9 +16,9 @@ alwaysApply: false
 - **ALWAYS** implement features according to the exact user stories specified
 - **ALWAYS** prioritize user experience for both bands and fans
 - **ALWAYS** maintain data privacy and security standards
-- **ALWAYS** follow the feature hierarchy: Epic 1 (Home) → Epic 2 (Scheduler) → Epic 3 (Passport) → Epic 4 (Playground) → Epic 5 (Profile)
+- **ALWAYS** follow the feature hierarchy: Epic 1 (Home) → Epic 2 (Scheduler) → Epic 3 (Chat) → Epic 4 (Playground) → Epic 5 (Profile)
 - **ALWAYS** implement proper error handling and loading states
-- **ALWAYS** ensure responsive design for mobile-first approach
+- **ALWAYS** ensure responsive design for web-first approach with mobile compatibility
 
 ### ❌ NEVER DO:
 - **NEVER** implement features not specified in this PRD
@@ -73,15 +73,12 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
 - As a fan, I want to see the latest updates and important history of my favorite bands at a glance.
 
 **Feature Details:**
-- **Member Stories:**
-  - Display at screen top with Instagram story-like UI
+- **Member Stories (Carousel):**
+  - Horizontal carousel showcasing member stories and updates
   - Create individual story channels per band member (e.g., 'Vocal OOO', 'Guitar XXX')
   - Content is NOT automatically deleted after 24 hours, permanently preserved in member's story archive
   - Support photo, short video, and text uploads
-- **Blog-style History:**
-  - Located below stories, time-reverse sorted blog format
-  - Posts consist of 1 representative image + text
-  - Only band admin accounts can create posts (e.g., '1st Album Release', 'First Solo Concert')
+  - Web-friendly carousel interface with navigation controls
 
 ### Epic 2: Scheduler (Official Calendar) - PRIORITY 2
 
@@ -97,25 +94,29 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
 - Fan view supports monthly/list view switching
 - **Policy:** NO automatic API integration in v1.0. Manual input by bands only. (Consider for v2.0 roadmap)
 
-### Epic 3: Indie Passport (My Fan Journey) - PRIORITY 3
+### Epic 3: Chat & Messaging (Real-time Communication) - PRIORITY 3
 
-> Personalized digital archive recording all fan activity memories.
+> Real-time communication platform connecting bands with their fans.
 
 **User Stories:**
-- As a fan, I want to store all concert tickets without worry of losing them and record my emotions in my own way.
+- As a fan, I want to chat with other fans and occasionally receive messages from band members.
+- As a band, I want to communicate directly with fans and build a closer community.
 
 **Feature Details:**
-- **Ticket Registration:**
-  - Physical tickets: Photo capture, Digital tickets: Image upload
-  - Manual input of ticket information (concert name, date, venue)
-  - **Policy:** Consider OCR for automatic text input UX improvement (v1.5 roadmap)
-- **Digital Diary:**
-  - Click registered ticket to access detail page
-  - Write personal diary/memo for each concert (private by default)
-  - Upload photos taken at concert or highlight videos (max 1 minute)
-- **Storage Policy:**
-  - Set upload capacity limit per user for cost management (e.g., 5GB total)
-  - Include in terms: 'Uploaded content is for personal storage, copyright and portrait rights responsibility lies with uploader'
+- **Fan Community Chat:**
+  - General chat room for all band fans
+  - Real-time messaging with basic text and emoji support
+  - Message history and search functionality
+- **Band-to-Fan Communication:**
+  - Special announcements channel (band → fans, one-way)
+  - Occasional live Q&A sessions with band members
+  - Push notifications for important band messages
+- **Moderation Features:**
+  - Basic spam detection and filtering
+  - Report functionality for inappropriate content
+  - Band admin controls for managing community
+
+**Note:** This feature will be implemented in a separate branch (`feature/chat-system`) after the home page refactoring is completed.
 
 ### Epic 4: Goods Playground (Fan Creation Playground) - PRIORITY 4
 
@@ -143,8 +144,8 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
 
 **Feature Details:**
 - Display 'Subscribed Bands List' on profile screen
-- Selecting specific band from list switches all app data (home, schedule, etc.) to that band's content
-- 'Indie Passport' shows all tickets integrated regardless of band
+- Selecting specific band from list switches all app data (home, schedule, chat, etc.) to that band's content
+- Profile integration with chat history and preferences
 
 ---
 
@@ -153,10 +154,11 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
 - **v1.5:**
   - Enhanced push notifications (schedule registration alerts, story upload notifications)
   - Fan data dashboard for bands (subscriber trends, content responses)
-  - Ticket archive OCR functionality
+  - Advanced chat features (voice messages, file sharing)
 - **v2.0:**
   - Automatic schedule integration (major ticketing site API integration)
   - Special benefits system for long-term subscribers
+  - Fan passport/journey tracking system
 
 ---
 
@@ -170,7 +172,7 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
   - 5GB per user for media uploads
   - Optimize image/video compression
 - **Performance Requirements:**
-  - Mobile-first responsive design
+  - Web-first responsive design with mobile compatibility
   - Fast loading times (<3 seconds)
 
 

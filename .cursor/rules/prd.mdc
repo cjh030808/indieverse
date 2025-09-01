@@ -111,6 +111,12 @@ Indie bands and their fans share strong bonds based on high loyalty, but communi
   - Special announcements channel (band → fans, one-way)
   - Occasional live Q&A sessions with band members
   - Push notifications for important band messages
+- **Private Q&A Room:** (NEW FEATURE)
+  - Fans can send questions but cannot see each other's messages
+  - Band members can see all fan messages and respond
+  - Band responses are visible to all fans
+  - Creates intimate 1:1 style communication between fans and band
+  - Ideal for personal questions, feedback, and direct fan-to-band interaction
 - **Moderation Features:**
   - Basic spam detection and filtering
   - Report functionality for inappropriate content
